@@ -1,0 +1,23 @@
+{
+  "ai_review": false,
+  "notify": {
+    "email": {
+      "enabled": true,
+      "smtp_host": "smtp.gmail.com",
+      "smtp_port": 587,
+      "to": [
+        "sanjaykushwah@askgalore.com",
+        "kunaltomar@askgalore.com",
+        "bhagyashreevishwakarma@askgalore.com",
+        "shantanudubey@askgalore.com"
+      ]
+    }
+  },
+  "sites": [
+    {
+      "name": "MachineAvatars homepage",
+      "url": "https://machineavatars.com/",
+      "watch_for": "any change to the page's content"
+    }
+  ]
+}

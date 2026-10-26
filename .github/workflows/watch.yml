@@ -1,0 +1,41 @@
+name: Daily website check
+
+on:
+  schedule:
+    - cron: "30 3 * * *"   # every day at 03:30 UTC (09:00 IST)
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install beautifulsoup4
+
+      - name: Check sites and email changes
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: python watch.py
+
+      - name: Save snapshots (and keep the schedule alive)
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add snapshots
+          if ! git diff --cached --quiet; then
+            git commit -m "Update snapshots"
+          elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt $((45*24*3600)) ]; then
+            # GitHub disables schedules after 60 days without activity
+            git commit --allow-empty -m "Keep scheduled workflow active"
+          fi
+          git push
