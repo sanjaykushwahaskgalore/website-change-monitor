@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: monitor-push
+  cancel-in-progress: false
+
 jobs:
   watch:
     runs-on: ubuntu-latest
@@ -38,4 +42,5 @@ jobs:
             # GitHub disables schedules after 60 days without activity
             git commit --allow-empty -m "Keep scheduled workflow active"
           fi
+          git pull --rebase
           git push

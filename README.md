@@ -73,3 +73,7 @@ python watch.py --config other-sites.json
 - Pages behind a login need cookies or an API instead.
 - Be polite: check every 15 minutes or less often, and respect each site's terms of use.
 - The AI review sees page text. A page could include text that tries to sway the verdict, so for high-stakes monitoring keep `ai_review` off or still log every change, which `changes.log` already does.
+
+## Uptime monitoring
+
+`uptime.py` checks every site in `uptime.json` every 5 minutes (`.github/workflows/uptime.yml`). A site counts as down if it times out (30 s), can't be reached, or returns a 5xx error, twice in a row 15 seconds apart. While a site is down you get a "DOWN" email on every check; when it recovers you get one "RECOVERED" email. Add or remove sites and recipients in `uptime.json`.
